@@ -14,6 +14,8 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 import Chart from "react-google-charts";
+import Swal from "sweetalert2";
+import history from "../services/history";
 
 export default function personalidade() {
   const theme = createTheme();
@@ -37,11 +39,8 @@ export default function personalidade() {
   const [state, setState] = useState([]);
   // const [options, setOption] = useState("Resultado");
 
-
-
-  
   // const dados = [pI, pO, pC, pA];
-  const a =  state.filter((item) => item.opcao === "A");
+  const a = state.filter((item) => item.opcao === "A");
   const o = state.filter((item) => item.opcao === "O");
   const i = state.filter((item) => item.opcao === "I");
   const c = state.filter((item) => item.opcao === "C");
@@ -54,18 +53,39 @@ export default function personalidade() {
   });
 
   const [data, setData] = useState([
-    ["Linguagens", "Quantidade"],
-    ["Tubarao", (a.length*4)],
-    ["Lobo", 123],//pO],
-    ["Aguia", 11],//pI],
-    ["Gato", 10],//pC],
+    ["Personalidades", "Porcentagem"],
+    ["Tubarao", a.length * 4],
+    ["Lobo", 123], //pO],
+    ["Aguia", 11], //pI],
+    ["Gato", 10], //pC],
   ]);
 
-  function handleSend() {
+  async function handleSend() {
+    console.log(state.data);
     setState([]);
-  console.log(pA);
-
+    Swal.fire({
+      title: "Sucesso!",
+      text: `Produção Atualizado com sucesso! \n ${console.log(state)}`,
+      icon: "success",
+      confirmButtonText: "Ok",
+    });
+    <Chart
+      width={"500px "}
+      height={"300px "}
+      chartType="PieChart"
+      data={data}
+      options={options}
+    />;
   }
+
+  function handleHistoryBack(e) {
+    e.preventDefault();
+    history.go(0);
+  }
+
+  function refreshPage(){
+    window.location.reload();
+} 
   return (
     <Container>
       <Typography class={classes.typography}>
@@ -647,7 +667,7 @@ export default function personalidade() {
             </MenuItem>
           </Select>
         </FormControl>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <Typography fontSize={"1.8rem"} align="center">
             <Stack>
               <Button
@@ -664,19 +684,24 @@ export default function personalidade() {
             </Stack>
           </Typography>
         </Grid>
+        <Grid item xs={6}>
+          <Typography fontSize={"1.8rem"} align="center">
+            <Stack>
+              <Button
+                variant="contained"
+                id="enviar"
+                endIcon={<SendIcon />}
+                type="submit"
+                onClick={refreshPage}
+                // disabled={state.length !== 25}
+              >
+                {" "}
+                Refazer Teste{" "}
+              </Button>
+            </Stack>
+          </Typography>
+        </Grid>
       </Grid>
-      <div className={classes.paper}>
-        <form className={classes.form} noValidate>
-          <Chart
-            
-            width={"500px"}
-            height={"300px"}
-            chartType="PieChart"
-            data={data}
-            options={options}
-          />
-        </form>
-      </div>
     </Container>
   );
 }
